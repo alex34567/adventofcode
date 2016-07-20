@@ -9,30 +9,30 @@ use std::cell::Cell;
 struct WireStatic {
     from_index: usize,
     number: u16,
-    l_o_r_shift: u8
+    l_o_r_shift: u8,
 }
 
 #[derive(Copy, Clone)]
 struct TwoWires {
     wire1: usize,
     wire2: usize,
-    and_o_or: u8
+    and_o_or: u8,
 }
 
 #[derive(Copy, Clone)]
 enum Wire {
-        Static(u16), //Number
-        OneWire(usize), //Index of wire to get value
-        WireStatic(WireStatic),
-        StaticWire(usize), //Index of wire to get value
-        WireToWire(usize), //Index of wire to get value
-        TwoWires(TwoWires),
-        None
+    Static(u16), // Number
+    OneWire(usize), // Index of wire to get value
+    WireStatic(WireStatic),
+    StaticWire(usize), // Index of wire to get value
+    WireToWire(usize), // Index of wire to get value
+    TwoWires(TwoWires),
+    None,
 }
 
 #[derive(Clone)]
 struct WireCell {
-    wire: Cell<Wire>
+    wire: Cell<Wire>,
 }
 
 impl WireCell {
@@ -40,19 +40,16 @@ impl WireCell {
         match self.wire.get() {
             Wire::Static(number) => return number,
             Wire::OneWire(index) => {
-                let output = wires[index].get_value(&wires) 
-            ^ 0xFFFF;
+                let output = wires[index].get_value(&wires) ^ 0xFFFF;
                 self.wire.set(Wire::Static(output));
                 return output;
             }
             Wire::WireStatic(wirestatic) => {
                 let output;
                 if wirestatic.l_o_r_shift == 0 {
-                    output = wires[wirestatic.from_index]
-                    .get_value(&wires) << wirestatic.number;
+                    output = wires[wirestatic.from_index].get_value(&wires) << wirestatic.number;
                 } else if wirestatic.l_o_r_shift == 1 {
-                    output = wires[wirestatic.from_index]
-                    .get_value(&wires) >> wirestatic.number;
+                    output = wires[wirestatic.from_index].get_value(&wires) >> wirestatic.number;
                 } else {
                     panic!("This should not happen");
                 }
@@ -60,8 +57,7 @@ impl WireCell {
                 return output;
             }
             Wire::StaticWire(from_index) => {
-                let output = 1 & 
-                    wires[from_index].get_value(&wires);
+                let output = 1 & wires[from_index].get_value(&wires);
                 self.wire.set(Wire::Static(output));
                 return output;
             }
@@ -76,15 +72,15 @@ impl WireCell {
                 let output;
                 if two_wire.and_o_or == 0 {
                     output = wire1 & wire2;
-                 } else if two_wire.and_o_or == 1 {
+                } else if two_wire.and_o_or == 1 {
                     output = wire1 | wire2;
-                 } else {
+                } else {
                     panic!("This should not happen");
-                 }
-                 self.wire.set(Wire::Static(output));
-                 return output;
+                }
+                self.wire.set(Wire::Static(output));
+                return output;
             }
-            Wire::None => panic!("Wire not connected")
+            Wire::None => panic!("Wire not connected"),
         }
     }
 }
@@ -94,42 +90,36 @@ fn ascii_to_index(ascii: &str) -> usize {
     if ascii.len() > 2 || ascii.len() < 1 {
         panic!("Ascii is too big");
     }
-    
+
     if ascii[0] < b'a' || ascii[0] > b'z' {
         panic!("Not lowercase letters");
     }
-    
+
     let half_output = ascii[0] as usize - 97;
-    
+
     if ascii.len() == 1 {
         return half_output;
     }
-    
+
     if ascii[1] < b'a' || ascii[1] > b'z' {
         panic!("Not lowercase letters");
     }
-    
+
     let other_half = (ascii[1] as usize - 96) * 26;
     (other_half) + half_output
 }
 
 fn main() {
-    let static_rex = 
-        Regex::new(r"^(\d+) -> ([a-z]+)").unwrap();
-    let one_wire_rex = 
-        Regex::new(r"^NOT+ ([a-z]+) -> ([a-z]+)").unwrap();
-    let wire_static_rex =
-        Regex::new(r"^([a-z]+) ([A-Z]+) (\d+) -> ([a-z]+)").unwrap();
-    let static_wire_rex =
-        Regex::new(r"^1 AND ([a-z]+) -> ([a-z]+)").unwrap();
-    let wire_to_wire_rex =
-        Regex::new(r"^([a-z]+) -> ([a-z]+)").unwrap();
-    let two_wire_rex = 
-        Regex::new(r"^([a-z]+) ([A-Z]+) ([a-z]+) -> ([a-z]+)").unwrap();
+    let static_rex = Regex::new(r"^(\d+) -> ([a-z]+)").unwrap();
+    let one_wire_rex = Regex::new(r"^NOT+ ([a-z]+) -> ([a-z]+)").unwrap();
+    let wire_static_rex = Regex::new(r"^([a-z]+) ([A-Z]+) (\d+) -> ([a-z]+)").unwrap();
+    let static_wire_rex = Regex::new(r"^1 AND ([a-z]+) -> ([a-z]+)").unwrap();
+    let wire_to_wire_rex = Regex::new(r"^([a-z]+) -> ([a-z]+)").unwrap();
+    let two_wire_rex = Regex::new(r"^([a-z]+) ([A-Z]+) ([a-z]+) -> ([a-z]+)").unwrap();
     let input = BufReader::new(File::open("input.txt").unwrap());
     let mut wires = Vec::new();
     for _ in 0..702 {
-        wires.push(WireCell { wire: Cell::new(Wire::None)});
+        wires.push(WireCell { wire: Cell::new(Wire::None) });
     }
     for wraped in input.lines() {
         let line = wraped.unwrap();
@@ -156,10 +146,11 @@ fn main() {
             } else {
                 panic!("Invalid input");
             }
-            wires[index].wire.set(
-                Wire::WireStatic(WireStatic 
-                    {from_index: from_index, 
-                    number: number, l_o_r_shift: l_o_r_shift}));
+            wires[index].wire.set(Wire::WireStatic(WireStatic {
+                from_index: from_index,
+                number: number,
+                l_o_r_shift: l_o_r_shift,
+            }));
         } else if static_wire_rex.is_match(&line) {
             let caps = static_wire_rex.captures(&line).unwrap();
             let from_index = ascii_to_index(&caps[1]);
@@ -183,9 +174,11 @@ fn main() {
             }
             let wire2 = ascii_to_index(&caps[3]);
             let index = ascii_to_index(&caps[4]);
-            wires[index].wire.set(Wire::TwoWires(
-                TwoWires { wire1: wire1, wire2: wire2, 
-                and_o_or: and_o_or}));
+            wires[index].wire.set(Wire::TwoWires(TwoWires {
+                wire1: wire1,
+                wire2: wire2,
+                and_o_or: and_o_or,
+            }));
         } else {
             panic!("Invalid input");
         }

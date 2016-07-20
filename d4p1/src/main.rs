@@ -10,14 +10,13 @@ fn main() {
         md5.reset();
         let input = key.to_string() + &padding.to_string();
         let input_bytes = input.into_bytes();
-        let mut output: [u8; 16] = [0; 16]; 
+        let mut output: [u8; 16] = [0; 16];
         md5.input(&input_bytes);
         md5.result(&mut output);
-        if output[0] == 0 && output[1] == 0 && 
-            output[2] & 0b11110000 == 0 {
+        if output[0] == 0 && output[1] == 0 && output[2] & 0b11110000 == 0 {
             break;
         }
         padding += 1;
     }
-    println!("{}",padding);
+    println!("{}", padding);
 }

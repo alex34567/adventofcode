@@ -5,12 +5,15 @@ use std::ops::{Index, IndexMut};
 
 struct DoubleVec<T> {
     forward: Vec<T>,
-    backward: Vec<T>
+    backward: Vec<T>,
 }
 
 impl<T> DoubleVec<T> {
     fn new() -> Self {
-        DoubleVec { forward: Vec::new(), backward : Vec::new() }
+        DoubleVec {
+            forward: Vec::new(),
+            backward: Vec::new(),
+        }
     }
     fn forward_push(&mut self, value: T) {
         self.forward.push(value);
@@ -49,7 +52,7 @@ impl<T> IndexMut<isize> for DoubleVec<T> {
     }
 }
 
-fn push_0_all_right(vec:&mut DoubleVec<DoubleVec<u8>>) {
+fn push_0_all_right(vec: &mut DoubleVec<DoubleVec<u8>>) {
     for x in 0..vec.backward_len() {
         vec[x as isize * -1 - 1].forward_push(0)
     }
@@ -58,7 +61,7 @@ fn push_0_all_right(vec:&mut DoubleVec<DoubleVec<u8>>) {
     }
 }
 
-fn push_0_all_left(vec:&mut DoubleVec<DoubleVec<u8>>) {
+fn push_0_all_left(vec: &mut DoubleVec<DoubleVec<u8>>) {
     for x in 0..vec.backward_len() {
         vec[x as isize * -1 - 1].backward_push(0)
     }
@@ -67,27 +70,27 @@ fn push_0_all_left(vec:&mut DoubleVec<DoubleVec<u8>>) {
     }
 }
 
-fn push_0_all_up(vec:&mut DoubleVec<DoubleVec<u8>>) {
+fn push_0_all_up(vec: &mut DoubleVec<DoubleVec<u8>>) {
     vec.forward_push(DoubleVec::new());
     for x in 0..vec[0].backward_len() {
         let len = vec.forward_len();
-        vec[len as isize -1].backward_push(0)
+        vec[len as isize - 1].backward_push(0)
     }
     for x in 0..vec[0].forward_len() {
         let len = vec.forward_len();
-        vec[len as isize -1].forward_push(0)
+        vec[len as isize - 1].forward_push(0)
     }
 }
 
-fn push_0_all_down(vec:&mut DoubleVec<DoubleVec<u8>>) {
+fn push_0_all_down(vec: &mut DoubleVec<DoubleVec<u8>>) {
     vec.backward_push(DoubleVec::new());
     for x in 0..vec[0].backward_len() {
         let len = vec.backward_len();
-        vec[len as isize *-1].backward_push(0)
+        vec[len as isize * -1].backward_push(0)
     }
     for x in 0..vec[0].forward_len() {
         let len = vec.backward_len();
-        vec[len as isize *-1].forward_push(0)
+        vec[len as isize * -1].forward_push(0)
     }
 }
 
@@ -115,7 +118,7 @@ fn main() {
             }
         } else if x == b'<' {
             current_x -= 1;
-            if current_x == grid[0].backward_len() as isize *-1 -1{
+            if current_x == grid[0].backward_len() as isize * -1 - 1 {
                 push_0_all_left(&mut grid);
                 grid[current_y][current_x] = 1;
                 houses += 1;
@@ -135,7 +138,7 @@ fn main() {
             }
         } else if x == b'v' {
             current_y -= 1;
-            if current_y == grid.backward_len() as isize *-1 -1{
+            if current_y == grid.backward_len() as isize * -1 - 1 {
                 push_0_all_down(&mut grid);
                 grid[current_y][current_x] = 1;
                 houses += 1;

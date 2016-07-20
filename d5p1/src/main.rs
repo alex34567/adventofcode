@@ -14,17 +14,16 @@ fn main() {
         for c in line.unwrap().chars() {
             substring[0] = substring[1];
             substring[1] = c as u8;
-            if c == 'a' || c == 'e' || 
-                    c == 'i' || c == 'o' || c == 'u' {
+            if c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' {
                 vowels += 1;
             }
             if substring[0] == substring[1] {
                 double_letter = 1;
             }
             if substring[0] == b'a' && substring[1] == b'b' ||
-                    substring[0] == b'c' && substring[1] == b'd' ||
-                    substring[0] == b'p' && substring[1] == b'q' ||
-                    substring[0] == b'x' && substring[1] == b'y' {
+               substring[0] == b'c' && substring[1] == b'd' ||
+               substring[0] == b'p' && substring[1] == b'q' ||
+               substring[0] == b'x' && substring[1] == b'y' {
                 bad_substring = 1;
                 break;
             }

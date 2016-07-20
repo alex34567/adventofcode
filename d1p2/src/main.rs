@@ -22,7 +22,7 @@ fn main() {
         }
         if floor == -1 {
             println!("{}", s + 1);
-            break
+            break;
         }
     }
 }

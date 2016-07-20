@@ -16,7 +16,7 @@ fn main() {
         let mut iter3 = line.iter();
         iter3.nth(1);
         for x in line.iter().enumerate().zip(iter2) {
-            let ((s,c), c2) = x;
+            let ((s, c), c2) = x;
             let mut iter = line.iter();
             iter.nth(1 + s);
             let mut iter2 = line.iter();
@@ -30,7 +30,7 @@ fn main() {
             if let Some(c3) = iter3.next() {
                 if c == c3 {
                     repeat = 1;
-                 }
+                }
             }
         }
         if repeat == 1 && pair == 1 {

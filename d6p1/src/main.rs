@@ -17,14 +17,14 @@ fn main() {
         let mut to_y = 0;
         for x in digit_rex.find_iter(&line).enumerate() {
             let (count, (start, end)) = x;
-            let number = &line.as_bytes()[start .. end];
+            let number = &line.as_bytes()[start..end];
             let number = std::str::from_utf8(number).unwrap();
             match count {
                 0 => from_x = number.parse().unwrap(),
                 1 => from_y = number.parse().unwrap(),
                 2 => to_x = number.parse().unwrap(),
                 3 => to_y = number.parse().unwrap(),
-                _ => panic!("Bad input")
+                _ => panic!("Bad input"),
             }
         }
         let from_x = from_x;

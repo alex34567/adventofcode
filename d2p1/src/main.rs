@@ -5,7 +5,7 @@ use std::str::FromStr;
 struct Present {
     l: u32,
     w: u32,
-    h: u32
+    h: u32,
 }
 
 fn main() {
@@ -16,15 +16,15 @@ fn main() {
         panic!("File not found");
     }
     let mut paper = 0;
-    let mut present = Present {l: 0, w: 0, h: 0};
+    let mut present = Present { l: 0, w: 0, h: 0 };
     let mut l_w_or_h = 0; // l is 0, w is 1, h is 2
     let mut buffer = String::new();
     for c in input_file.bytes() {
         if let Ok(x) = c {
             if x == b'\r' {
-                continue
+                continue;
             }
-            if x == b'x' || x == b'\n'{
+            if x == b'x' || x == b'\n' {
                 if let Ok(x) = u32::from_str(&buffer) {
                     match l_w_or_h {
                         0 => present.l = x,
