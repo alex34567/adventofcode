@@ -1,7 +1,0 @@
-[package]
-name = "d4p1"
-version = "0.1.0"
-authors = ["Alex Eckhart <eckhartalex@gmail.com>"]
-
-[dependencies]
-rust-crypto = "0.2.36"

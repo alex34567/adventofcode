@@ -1,5 +1,5 @@
 [root]
-name = "d4p1"
+name = "d4"
 version = "0.1.0"
 dependencies = [
  "rust-crypto 0.2.36 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -7,7 +7,7 @@ dependencies = [
 
 [[package]]
 name = "gcc"
-version = "0.3.31"
+version = "0.3.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -37,7 +37,7 @@ name = "rust-crypto"
 version = "0.2.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "gcc 0.3.31 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gcc 0.3.32 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
