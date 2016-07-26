@@ -4,12 +4,11 @@ use std::collections::HashMap;
 use std::io::BufReader;
 use std::mem;
 
-fn d3(robo: bool) -> u16 {
+fn d3(robo: bool) -> usize {
     let mut map = HashMap::new();
     map.insert((0,0), ());
     let mut current_x = 0;
     let mut current_y = 0;
-    let mut houses = 1;
     let mut back_x = 0;
     let mut back_y = 0;
     let input_file = File::open("input.txt").unwrap();
@@ -18,28 +17,16 @@ fn d3(robo: bool) -> u16 {
         for x in l.chars() {
             if x == '>' {
                 current_x += 1;
-                if !map.contains_key(&(current_x, current_y)) {
-                    map.insert((current_x,current_y), ());
-                    houses += 1;
-                }
+                map.entry((current_x, current_y)).or_insert(());
             } else if x == '<' {
                 current_x -= 1;
-                if !map.contains_key(&(current_x, current_y)) {
-                    map.insert((current_x,current_y), ());
-                    houses += 1;
-                }
+                map.entry((current_x, current_y)).or_insert(());
             } else if x == '^' {
                 current_y += 1;
-                if !map.contains_key(&(current_x, current_y)) {
-                    map.insert((current_x,current_y), ());
-                    houses += 1;
-                }
+                map.entry((current_x, current_y)).or_insert(());
             } else if x == 'v' {
                 current_y -= 1;
-                if !map.contains_key(&(current_x, current_y)) {
-                    map.insert((current_x,current_y), ());
-                    houses += 1;
-                }
+                map.entry((current_x, current_y)).or_insert(());
             }
             if robo {
                 mem::swap(&mut current_x, &mut back_x);
@@ -47,7 +34,7 @@ fn d3(robo: bool) -> u16 {
             }
         }
     }
-    houses
+    map.len()
 }
 
 fn main() {
