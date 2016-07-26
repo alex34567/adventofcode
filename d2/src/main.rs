@@ -18,10 +18,10 @@ enum SmallestDim {
 
 impl SmallestDim {
     fn unwrap(&self) -> u32 {
-        match self {
-            &SmallestDim::LengthTimesWidth(x) => return x,
-            &SmallestDim::WidthTimesHeight(x) => return x,
-            &SmallestDim::HeightTimesLength(x) => return x,
+        match *self {
+            SmallestDim::LengthTimesWidth(x) | 
+             SmallestDim::WidthTimesHeight(x) | 
+             SmallestDim::HeightTimesLength(x) => x,
         }
     }
 }
