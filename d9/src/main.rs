@@ -11,6 +11,42 @@ struct Route {
     distance: usize,
 }
 
+fn permutate(route: Route, route_size: usize, jumps: &[Vec<(usize, usize)>]) -> (usize, usize) {
+    let santa_loc = *route.stops.last().unwrap();
+    let mut smallest = std::usize::MAX;
+    let mut biggest = 0;
+    for jump in &jumps[santa_loc] {
+        let mut valid = true;
+        for stop in &route.stops {
+            if jump.0 == *stop {
+                valid = false;
+            }
+        }
+        if valid {
+            let mut new_route = route.clone();
+            new_route.stops.push(jump.0);
+            new_route.distance += jump.1;
+            if new_route.stops.len() < route_size {
+                let (route_smallest, route_biggest) = permutate(new_route, route_size, jumps);
+                if route_smallest < smallest {
+                    smallest = route_smallest;
+                }
+                if route_biggest > biggest {
+                    biggest = route_biggest;
+                }
+            } else {
+                if new_route.distance < smallest {
+                    smallest = new_route.distance;
+                }
+                if new_route.distance > biggest {
+                    biggest = new_route.distance;
+                }
+            }
+        }
+    }
+    (smallest, biggest)
+}
+
 fn main() {
     let input = File::open("input.txt").unwrap();
     let input = BufReader::new(input);
@@ -36,47 +72,24 @@ fn main() {
     }
     let route_size = index_map.len();
     drop(index_map);
-    let mut routes = Vec::with_capacity(jumps.len());
-    for x in 0..route_size {
-        routes.push(Route { 
-         stops: Vec::with_capacity(1),
-         distance: 0,
-         });
-        routes[x].stops.push(x);
-    }
-    while routes[0].stops.len() != route_size {
-        let mut new_routes = Vec::with_capacity(routes.len());
-        for route in &routes {
-            let santa_loc = *route.stops.last().unwrap();
-            for jump in &jumps[santa_loc] {
-                let mut valid = true;
-                for stop in &route.stops {
-                    if jump.0 == *stop {
-                        valid = false;
-                    }
-                }
-                if valid {
-                    let mut new_route = route.clone();
-                    new_route.stops.push(jump.0);
-                    new_route.distance += jump.1;
-                    new_routes.push(new_route);
-                }
-            }
-        }
-        routes = new_routes;
-    }
     let mut shortest_distance = std::usize::MAX;
-    for route in &routes {
-        if route.distance < shortest_distance {
-            shortest_distance = route.distance;
-        }
-    }
-    println!("The shortest distance that Santa can deliver all the pressents is {}", shortest_distance);
     let mut longest_distance = 0;
-    for route in &routes {
-        if route.distance > longest_distance {
-            longest_distance = route.distance;
+    for x in 0..route_size {
+        let mut route = Route {
+            stops: Vec::with_capacity(1),
+            distance: 0,
+        };
+        route.stops.push(x);
+        let (route_smallest, route_biggest) = permutate(route, route_size, &jumps);
+        if route_smallest < shortest_distance {
+            shortest_distance = route_smallest;
+        }
+        if route_biggest > longest_distance {
+            longest_distance = route_biggest;
         }
     }
-    println!("The longest distance that Santa can deliver all the pressents is {}", longest_distance);
+    println!("The shortest distance that Santa can deliver all the pressents is {}",
+             shortest_distance);
+    println!("The longest distance that Santa can deliver all the pressents is {}",
+             longest_distance);
 }
