@@ -7,12 +7,11 @@ use std::fs::File;
 use std::collections::HashMap;
 
 fn happy_expand(happyness_table: &mut Vec<Vec<i32>>, len: usize) {
-    let new_vec;
-    if len != 0 {
-        new_vec = vec![0; len];
+    let new_vec = if len != 0 {
+        vec![0; len]
     } else {
-        new_vec = Vec::new();
-    }
+        Vec::new()
+    };
     happyness_table.push(new_vec);
     for vec in happyness_table {
             vec.push(0);
@@ -38,10 +37,11 @@ fn happy_parse(happyness_table: &mut Vec<Vec<i32>>,
     happyness_table[index1][index2] = happyness;
 }
 
-fn permutate(round_table: &Vec<usize>, happy_table: &Vec<Vec<i32>>)  -> i32 {
+fn permutate(round_table: &[usize], happy_table: &[Vec<i32>]) -> i32 {
     if round_table.len() != happy_table.len() {
         let mut opt_happyness = std::i32::MIN;
-        let mut test_table = round_table.clone();
+        let mut test_table = vec![0; round_table.len()];
+        test_table.copy_from_slice(round_table);
         test_table.push(0);
         for x in 0..happy_table.len() {
             let mut continue_out = false;
@@ -55,7 +55,7 @@ fn permutate(round_table: &Vec<usize>, happy_table: &Vec<Vec<i32>>)  -> i32 {
                 continue;
             }
             *test_table.last_mut().unwrap() = x;
-            let happyness = permutate(&test_table, &happy_table);
+            let happyness = permutate(&test_table, happy_table);
             if happyness > opt_happyness {
                 opt_happyness = happyness;
             }
